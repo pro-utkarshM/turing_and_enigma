@@ -1,26 +1,41 @@
 #include <stdio.h>
+#include <time.h>
 #include "vm.h"
 
-// Sample program in VM assembly language
-const uint8_t program[] = {
-    LOAD << 4 | 0x0, 'A',       // LOAD R0, 'A'
-    CALL_ENIGMA << 4 | 0x0,     // CALL_ENIGMA on R0
-    STORE << 4 | 0x0, 0x10,     // STORE R0 at memory[0x10]
-    LOAD << 4 | 0x1, 0x00,      // LOAD R1, 0 (initial state for Turing machine)
-    CALL_TURING << 4 | 0x1,     // CALL_TURING on R1
-    HLT << 4                     // HLT
-};
-
 int main() {
-    VM vm;
-    init_vm(&vm);
-
-    // Load the program into VM memory
-    for (int i = 0; i < sizeof(program); i++) {
-        vm.memory[i] = program[i];
-    }
-
     printf("Running the VM program...\n");
-    run_vm(&vm);
+
+    // Initialize VM
+    VM vm;
+    vm_init(&vm);
+
+    // Example message to encrypt and decrypt
+    const char *message = "HELLO";
+
+    // Load message into register
+    vm_load(&vm, 0, message);
+
+    // Encrypt using Enigma
+    printf("Encrypting message using Enigma...\n");
+    vm_execute(&vm, ENCRYPT, 0);  // Encrypt the message in register 0
+
+    // Store the encrypted message (for testing purposes)
+    printf("Encrypted message: %s\n", vm.registers[0]);
+
+    // Measure decryption time
+    clock_t start = clock();  // Start time
+
+    printf("Decrypting message using Turing machine...\n");
+    vm_execute(&vm, DECRYPT, 0);  // Decrypt the message in register 0
+
+    clock_t end = clock();  // End time
+
+    // Output the decrypted message
+    printf("Decrypted message: %s\n", vm.registers[0]);
+
+    // Calculate elapsed time in seconds
+    double elapsed_time = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("Time taken to decrypt: %.6f seconds\n", elapsed_time);
+
     return 0;
 }

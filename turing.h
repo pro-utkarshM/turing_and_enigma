@@ -1,6 +1,6 @@
 #ifndef TURING_H
 #define TURING_H
 
-void run_turing_machine();
+void turing_decrypt(char *encrypted);
 
-#endif
+#endif // TURING_H

@@ -1,6 +1,6 @@
 #ifndef ENIGMA_H
 #define ENIGMA_H
 
-char enigma_encrypt(char ch);
+void enigma_encrypt(char *input);
 
-#endif
+#endif // ENIGMA_H
